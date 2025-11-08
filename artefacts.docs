@@ -1,0 +1,316 @@
+
+
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % pwd
+/Users/ishanrevri/Desktop/Priyanka Devops/Docker/SkillTest1-MicroservicesTask/SkillTest1-Microservices-Task
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % ls -ltr
+total 104
+-rw-r--r--@ 1 ishanrevri  staff  11357  8 Nov 14:14 LICENSE
+-rw-r--r--@ 1 ishanrevri  staff   1582  8 Nov 14:14 README.md
+-rw-r--r--@ 1 ishanrevri  staff    620  8 Nov 15:07 docker-compose.yaml
+drwxr-xr-x@ 6 ishanrevri  staff    192  8 Nov 15:11 Microservices
+-rw-r--r--@ 1 ishanrevri  staff  26048  8 Nov 15:22 artefacts.docs
+-rw-r--r--@ 1 ishanrevri  staff    162  8 Nov 15:23 ~$tefacts.docs
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % 
+
+
+
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % cat docker-compose.yaml 
+version: "3.9"
+
+services:
+  user-service:
+    build: ./Microservices/user-service
+    container_name: user-service
+    ports:
+      - "3000:3000"
+
+  product-service:
+    build: ./Microservices/product-service
+    container_name: product-service
+    ports:
+      - "3001:3001"
+
+  order-service:
+    build: ./Microservices/order-service
+    container_name: order-service
+    ports:
+      - "3002:3002"
+
+  gateway-service:
+    build: ./Microservices/gateway-service
+    container_name: gateway-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task %
+
+
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % cd Microservices 
+(base) ishanrevri@Ishans-MacBook-Pro Microservices % ls -ltr
+total 0
+drwxr-xr-x@ 5 ishanrevri  staff  160  8 Nov 14:26 user-service
+drwxr-xr-x@ 5 ishanrevri  staff  160  8 Nov 14:28 product-service
+drwxr-xr-x@ 5 ishanrevri  staff  160  8 Nov 14:29 order-service
+drwxr-xr-x@ 5 ishanrevri  staff  160  8 Nov 14:30 gateway-service
+(base) ishanrevri@Ishans-MacBook-Pro Microservices % 
+
+
+(base) ishanrevri@Ishans-MacBook-Pro Microservices % cd user-service 
+(base) ishanrevri@Ishans-MacBook-Pro user-service % ls -ltr
+total 24
+-rw-r--r--@ 1 ishanrevri  staff  419  8 Nov 14:14 app.js
+-rw-r--r--@ 1 ishanrevri  staff  145  8 Nov 14:14 package.json
+-rw-r--r--@ 1 ishanrevri  staff  291  8 Nov 14:27 Dockerfile
+(base) ishanrevri@Ishans-MacBook-Pro user-service % cat Dockerfile 
+# Use Node.js LTS version
+FROM node:18
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the code
+COPY . .
+
+# Expose the port for this service
+EXPOSE 3000
+
+# Start the service
+CMD ["node", "app.js"]
+(base) ishanrevri@Ishans-MacBook-Pro user-service %
+
+
+
+
+(base) ishanrevri@Ishans-MacBook-Pro user-service % cd ../product-service 
+(base) ishanrevri@Ishans-MacBook-Pro product-service % ls -ltr
+total 24
+-rw-r--r--@ 1 ishanrevri  staff  451  8 Nov 14:14 app.js
+-rw-r--r--@ 1 ishanrevri  staff  145  8 Nov 14:14 package.json
+-rw-r--r--@ 1 ishanrevri  staff  108  8 Nov 14:28 Dockerfile
+(base) ishanrevri@Ishans-MacBook-Pro product-service % cat Dockerfile 
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3001
+CMD ["node", "app.js"]
+(base) ishanrevri@Ishans-MacBook-Pro product-service % pwd
+/Users/ishanrevri/Desktop/Priyanka Devops/Docker/SkillTest1-MicroservicesTask/SkillTest1-Microservices-Task/Microservices/product-service
+(base) ishanrevri@Ishans-MacBook-Pro product-service %
+
+
+(base) ishanrevri@Ishans-MacBook-Pro Microservices % cd order-service 
+(base) ishanrevri@Ishans-MacBook-Pro order-service % ls -ltr 
+total 24
+-rw-r--r--@ 1 ishanrevri  staff  651  8 Nov 14:14 app.js
+-rw-r--r--@ 1 ishanrevri  staff  145  8 Nov 14:14 package.json
+-rw-r--r--@ 1 ishanrevri  staff  108  8 Nov 14:29 Dockerfile
+(base) ishanrevri@Ishans-MacBook-Pro order-service % cat Dockerfile 
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3002
+CMD ["node", "app.js"]
+(base) ishanrevri@Ishans-MacBook-Pro order-service % pwd
+/Users/ishanrevri/Desktop/Priyanka Devops/Docker/SkillTest1-MicroservicesTask/SkillTest1-Microservices-Task/Microservices/order-service
+(base) ishanrevri@Ishans-MacBook-Pro order-service % 
+
+
+
+(base) ishanrevri@Ishans-MacBook-Pro order-service % cd ../gateway-service 
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service % ls -ltr
+total 24
+-rw-r--r--@ 1 ishanrevri  staff  1367  8 Nov 14:14 app.js
+-rw-r--r--@ 1 ishanrevri  staff   145  8 Nov 14:14 package.json
+-rw-r--r--@ 1 ishanrevri  staff   108  8 Nov 14:30 Dockerfile
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service % cat Dockerfile 
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3003
+CMD ["node", "app.js"]
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service % pwd
+/Users/ishanrevri/Desktop/Priyanka Devops/Docker/SkillTest1-MicroservicesTask/SkillTest1-Microservices-Task/Microservices/gateway-service
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service %
+
+
+
+
+
+
+Build and RUN docker-compose.yaml file
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % docker-compose up --build
+
+WARN[0000] /Users/ishanrevri/Desktop/Priyanka Devops/Docker/SkillTest1-MicroservicesTask/SkillTest1-Microservices-Task/docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Building 4.1s (37/37) FINISHED                                                                                                                                                                          
+ => [internal] load local bake definitions                                                                                                                                                             0.0s
+ => => reading from stdin 2.94kB                                                                                                                                                                       0.0s
+ => [gateway-service internal] load build definition from Dockerfile                                                                                                                                   0.0s
+ => => transferring dockerfile: 145B                                                                                                                                                                   0.0s
+ => [order-service internal] load build definition from Dockerfile                                                                                                                                     0.0s
+ => => transferring dockerfile: 145B                                                                                                                                                                   0.0s
+ => [user-service internal] load build definition from Dockerfile                                                                                                                                      0.0s
+ => => transferring dockerfile: 330B                                                                                                                                                                   0.0s
+ => [product-service internal] load build definition from Dockerfile                                                                                                                                   0.0s
+ => => transferring dockerfile: 145B                                                                                                                                                                   0.0s
+ => [gateway-service internal] load metadata for docker.io/library/node:18                                                                                                                             2.5s
+ => [auth] library/node:pull token for registry-1.docker.io                                                                                                                                            0.0s
+ => [product-service internal] load .dockerignore                                                                                                                                                      0.0s
+ => => transferring context: 2B                                                                                                                                                                        0.0s
+ => [gateway-service internal] load .dockerignore                                                                                                                                                      0.0s
+ => => transferring context: 2B                                                                                                                                                                        0.0s
+ => [user-service internal] load .dockerignore                                                                                                                                                         0.0s
+ => => transferring context: 2B                                                                                                                                                                        0.0s
+ => [order-service internal] load .dockerignore                                                                                                                                                        0.0s
+ => => transferring context: 2B                                                                                                                                                                        0.0s
+ => [user-service 1/5] FROM docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783                                                                          0.0s
+ => => resolve docker.io/library/node:18@sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783                                                                                       0.0s
+ => [gateway-service internal] load build context                                                                                                                                                      0.0s
+ => => transferring context: 89B                                                                                                                                                                       0.0s
+ => [product-service internal] load build context                                                                                                                                                      0.0s
+ => => transferring context: 89B                                                                                                                                                                       0.0s
+ => [order-service internal] load build context                                                                                                                                                        0.0s
+ => => transferring context: 89B                                                                                                                                                                       0.0s
+ => [user-service internal] load build context                                                                                                                                                         0.0s
+ => => transferring context: 90B                                                                                                                                                                       0.0s
+ => CACHED [gateway-service 2/5] WORKDIR /app                                                                                                                                                          0.0s
+ => CACHED [user-service 3/5] COPY package*.json ./                                                                                                                                                    0.0s
+ => CACHED [user-service 4/5] RUN npm install                                                                                                                                                          0.0s
+ => CACHED [user-service 5/5] COPY . .                                                                                                                                                                 0.0s
+ => CACHED [order-service 3/5] COPY package*.json ./                                                                                                                                                   0.0s
+ => CACHED [order-service 4/5] RUN npm install                                                                                                                                                         0.0s
+ => CACHED [order-service 5/5] COPY . .                                                                                                                                                                0.0s
+ => CACHED [product-service 3/5] COPY package*.json ./                                                                                                                                                 0.0s
+ => CACHED [product-service 4/5] RUN npm install                                                                                                                                                       0.0s
+ => CACHED [product-service 5/5] COPY . .                                                                                                                                                              0.0s
+ => CACHED [gateway-service 3/5] COPY package*.json ./                                                                                                                                                 0.0s
+ => CACHED [gateway-service 4/5] RUN npm install                                                                                                                                                       0.0s
+ => CACHED [gateway-service 5/5] COPY . .                                                                                                                                                              0.0s
+ => [product-service] exporting to image                                                                                                                                                               0.2s
+ => => exporting layers                                                                                                                                                                                0.0s
+ => => exporting manifest sha256:8d2f961b0fed0bf094d55fdf332bb6012ad79ec9e8eb48f5600a663483c36b98                                                                                                      0.0s
+ => => exporting config sha256:df8be9dc40786fca86a7416dd1650b0b73b58a2265ae29c521a3fa99137cdc79                                                                                                        0.0s
+ => => exporting attestation manifest sha256:e7cca987986a2949aa679dc29efc31f779c961762d06d924c0f1aebe726ebb38                                                                                          0.1s
+ => => exporting manifest list sha256:35417539a88f867c683d5981eabd6908147738af389abe033a530e730bc5ebc2                                                                                                 0.0s
+ => => naming to docker.io/library/skilltest1-microservices-task-product-service:latest                                                                                                                0.0s
+ => => unpacking to docker.io/library/skilltest1-microservices-task-product-service:latest                                                                                                             0.0s
+ => [order-service] exporting to image                                                                                                                                                                 0.2s
+ => => exporting layers                                                                                                                                                                                0.0s
+ => => exporting manifest sha256:b364c7fbb5cbfad12d86846c0a33853dbe54c6cc40d704ff5020a27aec229d6d                                                                                                      0.0s
+ => => exporting config sha256:548e8200ff074f7c0a7077e2c9fcab7a8075fcb4926ba8ae6272747a48609964                                                                                                        0.0s
+ => => exporting attestation manifest sha256:2c6219430d9651c7a47e64b700298b322c36877e3b907d324ba00e8f5a0cd789                                                                                          0.1s
+ => => exporting manifest list sha256:289397e5846d70697e76f066c12003c6bc306ab53563f63e23d1916046ac4ddb                                                                                                 0.0s
+ => => naming to docker.io/library/skilltest1-microservices-task-order-service:latest                                                                                                                  0.0s
+ => => unpacking to docker.io/library/skilltest1-microservices-task-order-service:latest                                                                                                               0.0s
+ => [user-service] exporting to image                                                                                                                                                                  0.3s
+ => => exporting layers                                                                                                                                                                                0.0s
+ => => exporting manifest sha256:5b03eb10cf6fb7fc173980f5a5ff2ed2fb61fe14241b574219323cbf477a21b1                                                                                                      0.0s
+ => => exporting config sha256:35bba240d5d8b5381f11d33c27aab5c23ce4790dae8e3ce905cb457f489614fe                                                                                                        0.0s
+ => => exporting attestation manifest sha256:da4180d77cf7b3e2db6a8082fe1c50fca3d6685cdaf0566a1ab692534963ae22                                                                                          0.1s
+ => => exporting manifest list sha256:ad75a03b5fbd5a3b8fd1342ea2b1497800c72bca7845c80fdb3f7c1ea3d91be8                                                                                                 0.0s
+ => => naming to docker.io/library/skilltest1-microservices-task-user-service:latest                                                                                                                   0.0s
+ => => unpacking to docker.io/library/skilltest1-microservices-task-user-service:latest                                                                                                                0.0s
+ => [gateway-service] exporting to image                                                                                                                                                               0.3s
+ => => exporting layers                                                                                                                                                                                0.0s
+ => => exporting manifest sha256:27a4448ae878445852115784337b9a9ac52ac3d04d62692ea9100657e1aa7cf1                                                                                                      0.0s
+ => => exporting config sha256:8791ef3be643d24c377b294d641fb2dc3ed19e31db41b0cf32f411b1646521d5                                                                                                        0.0s
+ => => exporting attestation manifest sha256:77f804e6747f4a88aedc6f55dbc7de9329c6ba548d8ebc38c34e3eaad5644893                                                                                          0.1s
+ => => exporting manifest list sha256:00125d9976e20117686491d378239bcc10804d1b2a15e85317d9853ead863e79                                                                                                 0.0s
+ => => naming to docker.io/library/skilltest1-microservices-task-gateway-service:latest                                                                                                                0.0s
+ => => unpacking to docker.io/library/skilltest1-microservices-task-gateway-service:latest                                                                                                             0.0s
+ => [product-service] resolving provenance for metadata file                                                                                                                                           0.1s
+ => [order-service] resolving provenance for metadata file                                                                                                                                             0.1s
+ => [gateway-service] resolving provenance for metadata file                                                                                                                                           0.0s
+ => [user-service] resolving provenance for metadata file                                                                                                                                              0.0s
+[+] Running 8/8
+ ? skilltest1-microservices-task-product-service  Built                                                                                                                                                0.0s 
+ ? skilltest1-microservices-task-gateway-service  Built                                                                                                                                                0.0s 
+ ? skilltest1-microservices-task-user-service     Built                                                                                                                                                0.0s 
+ ? skilltest1-microservices-task-order-service    Built                                                                                                                                                0.0s 
+ ? Container user-service                         Created                                                                                                                                              0.2s 
+ ? Container order-service                        Created                                                                                                                                              0.1s 
+ ? Container product-service                      Created                                                                                                                                              0.2s 
+ ? Container gateway-service                      Created                                                                                                                                              0.2s 
+Attaching to gateway-service, order-service, product-service, user-service
+user-service  | User service running on port 3000
+order-service  | Order service running on port 3002
+product-service  | Product service running on port 3001
+gateway-service  | Gateway service running on port 3003
+
+
+Logs:
+(base) ishanrevri@Ishans-MacBook-Pro SkillTest1-Microservices-Task % docker-compose logs -f                                                                                          
+
+WARN[0000] /Users/ishanrevri/Desktop/Priyanka Devops/Docker/SkillTest1-MicroservicesTask/SkillTest1-Microservices-Task/docker-compose.yaml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+product-service  | Product service running on port 3001
+gateway-service  | Gateway service running on port 3003
+user-service     | User service running on port 3000
+order-service    | Order service running on port 3002
+^C
+
+
+
+Validation:
+
+All Links are up and running
+
+
+
+
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service % docker images
+REPOSITORY                                      TAG              IMAGE ID       CREATED             SIZE
+gateway-service                                 latest           c489841b812a   34 minutes ago      1.58GB
+skilltest1-microservices-task-gateway-service   latest           00125d9976e2   34 minutes ago      1.58GB
+order-services                                  latest           b218131b0e00   37 minutes ago      1.58GB
+skilltest1-microservices-task-order-service     latest           289397e5846d   37 minutes ago      1.58GB
+skilltest1-microservices-task-product-service   latest           35417539a88f   44 minutes ago      1.58GB
+product-service                                 latest           92c335496977   44 minutes ago      1.58GB
+user-service                                    latest           d61f263c8c98   About an hour ago   1.58GB
+skilltest1-microservices-task-user-service      latest           ad75a03b5fbd   About an hour ago   1.58GB
+docker-frontend                                 latest           36bdb10716ba   12 hours ago        2.69GB
+docker-backend                                  latest           54adb190bfac   12 hours ago        1.63GB
+redis                                           latest           5c7c0445ed86   4 days ago          200MB
+redis                                           7.2              c4a39265bdf4   4 days ago          172MB
+mongo                                           latest           86835e8da0f9   10 days ago         1.24GB
+redhat/granite-3-2b-instruct                    1.0-1731549069   e63d2cf6db2a   12 months ago       5.78GB
+mongo-express                                   latest           1b23d7976f02   20 months ago       286MB
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service % docker ps
+CONTAINER ID   IMAGE                                           COMMAND                  CREATED          STATUS          PORTS                                         NAMES
+5af46d102c5d   skilltest1-microservices-task-gateway-service   "docker-entrypoint.sÉ"   19 minutes ago   Up 19 minutes   0.0.0.0:3003->3003/tcp, [::]:3003->3003/tcp   gateway-service
+3b57443e699a   skilltest1-microservices-task-user-service      "docker-entrypoint.sÉ"   19 minutes ago   Up 19 minutes   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp   user-service
+ebc1123eeb35   skilltest1-microservices-task-order-service     "docker-entrypoint.sÉ"   19 minutes ago   Up 19 minutes   0.0.0.0:3002->3002/tcp, [::]:3002->3002/tcp   order-service
+29a6f4ec1893   skilltest1-microservices-task-product-service   "docker-entrypoint.sÉ"   19 minutes ago   Up 19 minutes   0.0.0.0:3001->3001/tcp, [::]:3001->3001/tcp   product-service
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service % docker network ls
+NETWORK ID     NAME                                    DRIVER    SCOPE
+e35534808375   bridge                                  bridge    local
+4864b27bef72   host                                    host      local
+f530249af007   mongo-network                           bridge    local
+99ab97758aef   none                                    null      local
+e305af134d03   skilltest1-microservices-task_default   bridge    local
+(base) ishanrevri@Ishans-MacBook-Pro gateway-service %
+
+
+
+
+
+
+
+
+
+
+
